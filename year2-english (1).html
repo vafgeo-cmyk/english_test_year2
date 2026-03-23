@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Year 2 English Tests</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1a2744;--blue:#2d6be4;--blue2:#1a4fb5;--sky:#e8f0fd;
+  --green:#1a9e5f;--green-bg:#e6f7ef;--red:#d63b3b;--red-bg:#fdeaea;
+  --amber:#b37c00;--amber-bg:#fff8e6;--purple:#6c3fcf;--purple-bg:#f0ebfd;
+  --teal:#0e7f72;--teal-bg:#e4f5f3;
+  --text:#1a2744;--muted:#6b7a99;--border:#d4dff7;
+  --bg:#f4f7fe;--white:#ffffff;--radius:12px;
+  --shadow:0 2px 16px rgba(45,107,228,.10);
+}
+html{font-size:16px}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:4rem}
+.header{background:var(--navy);color:white;padding:2rem 1.5rem 1.5rem;text-align:center;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:rgba(108,63,207,.25)}
+.header::after{content:'';position:absolute;bottom:-40px;left:-40px;width:140px;height:140px;border-radius:50%;background:rgba(14,127,114,.2)}
+.header-inner{position:relative;z-index:1}
+.pencil-icon{font-size:2.5rem;margin-bottom:.5rem}
+.header h1{font-family:'Nunito',sans-serif;font-size:1.8rem;font-weight:800;letter-spacing:-.5px;margin-bottom:.25rem}
+.header p{font-size:.95rem;opacity:.75}
+.variant-badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:.2rem .75rem;font-size:.75rem;margin-top:.5rem}
+.main{max-width:900px;margin:0 auto;padding:0 1rem}
+#name-screen{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);padding:2.5rem 2rem;margin:2rem auto;max-width:520px;text-align:center}
+#name-screen h2{font-family:'Nunito',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:.5rem;color:var(--navy)}
+#name-screen p{color:var(--muted);font-size:.95rem;margin-bottom:1.5rem}
+.name-input{width:100%;font-family:'Nunito Sans',sans-serif;font-size:1.1rem;padding:.75rem 1rem;border:2px solid var(--border);border-radius:8px;color:var(--text);outline:none;transition:border-color .2s;margin-bottom:1.25rem}
+.name-input:focus{border-color:var(--blue)}
+.test-select-label{font-family:'Nunito',sans-serif;font-weight:700;font-size:.85rem;color:var(--navy);margin-bottom:.75rem;display:block;text-align:left}
+.test-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem}
+.test-card{border:2px solid var(--border);border-radius:10px;padding:.9rem .75rem;cursor:pointer;transition:border-color .2s,background .2s,transform .1s;background:var(--bg);text-align:center;user-select:none}
+.test-card:hover{border-color:var(--blue);background:var(--sky)}
+.test-card.selected{border-color:var(--blue);background:var(--sky);transform:scale(1.02)}
+.test-card.selected .tc-icon{transform:scale(1.15)}
+.tc-icon{font-size:1.6rem;margin-bottom:.3rem;display:block;transition:transform .2s}
+.tc-name{font-family:'Nunito',sans-serif;font-weight:800;font-size:.85rem;color:var(--navy)}
+.tc-info{font-size:.72rem;color:var(--muted);margin-top:2px}
+.btn-start{width:100%;font-family:'Nunito',sans-serif;font-weight:800;font-size:1.1rem;padding:.85rem;background:var(--blue);color:white;border:none;border-radius:8px;cursor:pointer;transition:background .2s,transform .1s}
+.btn-start:hover{background:var(--blue2)}
+.btn-start:active{transform:scale(.98)}
+.btn-start:disabled{opacity:.4;cursor:not-allowed}
+#test-screen{display:none}
+.info-bar{display:flex;gap:10px;margin:1.5rem 0 1rem;flex-wrap:wrap}
+.info-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem 1rem;flex:1;min-width:110px;text-align:center;box-shadow:var(--shadow)}
+.info-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:2px}
+.info-val{font-family:'Nunito',sans-serif;font-size:1.4rem;font-weight:800;color:var(--navy)}
+#timer.warning{color:var(--red)}
+.progress-wrap{background:var(--border);border-radius:99px;height:6px;margin-bottom:1.5rem;overflow:hidden}
+.progress-fill{background:var(--blue);height:100%;border-radius:99px;transition:width .3s;width:0%}
+.section-title{font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--blue);border-bottom:2px solid var(--sky);padding-bottom:.4rem;margin:1.75rem 0 .9rem}
+/* Grammar cards */
+.g-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.25rem;margin-bottom:10px}
+.g-card:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(45,107,228,.12)}
+.g-header{display:flex;align-items:flex-start;gap:8px;margin-bottom:.6rem}
+.g-qnum{font-size:.75rem;color:var(--muted);font-weight:600;min-width:22px;padding-top:2px}
+.g-marks{font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:99px;margin-left:auto;background:var(--sky);color:var(--blue2)}
+.g-question{font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);line-height:1.6;margin-bottom:.75rem}
+.g-context{background:var(--bg);border-left:3px solid var(--purple);border-radius:0 6px 6px 0;padding:.6rem .9rem;font-size:.95rem;line-height:1.7;color:var(--text);margin-bottom:.75rem;font-style:italic}
+.g-instruction{font-size:.85rem;color:var(--muted);margin-bottom:.6rem}
+.g-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.g-opts.single-col{grid-template-columns:1fr}
+.g-opt{font-family:'Nunito Sans',sans-serif;font-size:.95rem;padding:9px 14px;border-radius:8px;border:2px solid var(--border);background:var(--bg);cursor:pointer;user-select:none;transition:border-color .2s,background .2s;text-align:left;display:flex;align-items:center;gap:8px}
+.g-opt:hover{border-color:var(--blue);background:var(--sky)}
+.g-opt.selected{border-color:var(--blue);background:var(--sky)}
+.g-opt.correct-final{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important}
+.g-opt.wrong-final{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important}
+.g-opt.correct-reveal{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important}
+.g-opt-bullet{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);flex-shrink:0}
+.g-opt.selected .g-opt-bullet{border-color:var(--blue);background:var(--blue)}
+.g-opt.correct-final .g-opt-bullet,.g-opt.correct-reveal .g-opt-bullet{border-color:var(--green);background:var(--green)}
+.g-opt.wrong-final .g-opt-bullet{border-color:var(--red);background:var(--red)}
+.g-input{font-family:'Nunito Sans',sans-serif;font-size:1rem;padding:7px 10px;border:1.5px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text);outline:none;transition:border-color .2s;width:100%}
+.g-input:focus{border-color:var(--blue);background:var(--white)}
+.g-input.correct{border-color:var(--green);background:var(--green-bg);color:var(--green)}
+.g-input.wrong{border-color:var(--red);background:var(--red-bg);color:var(--red)}
+.g-check{font-size:1rem;margin-left:8px;display:none}
+.g-check.show{display:inline}
+.g-correct-ans{font-size:.82rem;color:var(--green);font-weight:600;margin-top:4px;display:none}
+.g-correct-ans.show{display:block}
+.g-ticks{display:flex;flex-direction:column;gap:8px}
+.g-tick{display:flex;align-items:center;gap:10px;padding:8px 12px;border:2px solid var(--border);border-radius:8px;background:var(--bg);cursor:pointer;user-select:none;transition:border-color .2s,background .2s}
+.g-tick:hover{border-color:var(--blue);background:var(--sky)}
+.g-tick.ticked{border-color:var(--blue);background:var(--sky)}
+.g-tick.correct-final{border-color:var(--green)!important;background:var(--green-bg)!important}
+.g-tick.wrong-final{border-color:var(--red)!important;background:var(--red-bg)!important}
+.g-tick.correct-reveal{border-color:var(--green)!important;background:var(--green-bg)!important}
+.tick-box{width:20px;height:20px;border:2px solid var(--border);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;color:transparent}
+.g-tick.ticked .tick-box{border-color:var(--blue);background:var(--blue);color:white}
+.g-tick.correct-final .tick-box,.g-tick.correct-reveal .tick-box{border-color:var(--green);background:var(--green);color:white}
+.g-tick.wrong-final .tick-box{border-color:var(--red);background:var(--red);color:white}
+.tick-label{font-size:.95rem;color:var(--text)}
+/* Spelling */
+.sp-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.25rem;margin-bottom:10px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.sp-num{font-size:.75rem;color:var(--muted);font-weight:600;min-width:22px}
+.sp-listen-btn{font-family:'Nunito',sans-serif;font-weight:700;font-size:.9rem;padding:8px 16px;border-radius:8px;border:2px solid var(--purple);background:var(--purple-bg);color:var(--purple);cursor:pointer;user-select:none;transition:background .2s,transform .1s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.sp-listen-btn:hover{background:var(--purple);color:white}
+.sp-listen-btn.playing{background:var(--purple);color:white;animation:pulse .8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.65}}
+.sp-sentence{font-size:.9rem;color:var(--muted);flex:1;min-width:180px;line-height:1.5;font-style:italic}
+.sp-input{font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;padding:7px 12px;border:2px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;transition:border-color .2s;width:160px}
+.sp-input:focus{border-color:var(--blue);background:var(--white)}
+.sp-input.correct{border-color:var(--green);background:var(--green-bg);color:var(--green)}
+.sp-input.wrong{border-color:var(--red);background:var(--red-bg);color:var(--red)}
+.sp-check{font-size:1.1rem;display:none}
+.sp-check.show{display:inline}
+.sp-correct-word{font-size:.82rem;color:var(--green);font-weight:700;display:none}
+.sp-correct-word.show{display:block}
+.speech-warning{background:var(--amber-bg);border:1px solid var(--amber);border-radius:8px;padding:.75rem 1rem;font-size:.88rem;color:var(--amber);margin-bottom:1rem;display:none}
+.speech-warning.show{display:block}
+/* Buttons */
+.btn-row{display:flex;gap:10px;margin-top:2rem;flex-wrap:wrap}
+.btn{font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;padding:.75rem 1.5rem;border-radius:8px;cursor:pointer;border:2px solid var(--border);background:var(--white);color:var(--text);transition:background .2s,transform .1s}
+.btn:hover{background:var(--sky)}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--blue);color:white;border-color:var(--blue)}
+.btn-primary:hover{background:var(--blue2)}
+/* Results */
+#results-screen{display:none}
+.results-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;text-align:center;margin:1.5rem 0;box-shadow:var(--shadow)}
+.score-circle{width:120px;height:120px;border-radius:50%;background:var(--sky);border:5px solid var(--blue);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 1rem}
+.score-big{font-family:'Nunito',sans-serif;font-size:2.5rem;font-weight:800;color:var(--blue);line-height:1}
+.score-denom{font-size:.8rem;color:var(--muted)}
+.score-name{font-family:'Nunito',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:.25rem}
+.score-band{font-size:1rem;color:var(--muted);margin-bottom:1rem}
+.band-chip{display:inline-block;padding:.3rem 1rem;border-radius:99px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.85rem;margin-bottom:1rem}
+.band-excellent{background:var(--green-bg);color:var(--green)}
+.band-good{background:var(--sky);color:var(--blue2)}
+.band-developing{background:var(--amber-bg);color:var(--amber)}
+.band-support{background:var(--red-bg);color:var(--red)}
+.email-status{font-size:.9rem;padding:.6rem 1rem;border-radius:8px;margin-top:.75rem;display:none}
+.email-status.sending{background:var(--sky);color:var(--blue2);display:block}
+.email-status.sent{background:var(--green-bg);color:var(--green);display:block}
+.email-status.failed{background:var(--red-bg);color:var(--red);display:block}
+.breakdown-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;color:var(--navy);margin:1.5rem 0 .75rem;text-align:left}
+.wrong-list{list-style:none}
+.wrong-item{background:var(--white);border:1px solid var(--border);border-left:4px solid var(--red);border-radius:8px;padding:.75rem 1rem;margin-bottom:8px;font-size:.9rem;display:flex;flex-direction:column;gap:.35rem}
+.wrong-item-header{display:flex;gap:.5rem;align-items:baseline;flex-wrap:wrap}
+.wrong-qnum{color:var(--muted);font-size:.8rem;min-width:28px}
+.wrong-q{flex:1;font-weight:600}
+.wrong-correct{color:var(--green);font-weight:700}
+.wrong-given{color:var(--red);font-size:.82rem}
+/* Toast & warning */
+.toast{position:fixed;top:1.2rem;left:50%;transform:translateX(-50%) translateY(-120px);z-index:998;background:var(--navy);color:white;font-family:'Nunito',sans-serif;font-weight:700;font-size:1rem;padding:.75rem 1.5rem;border-radius:99px;box-shadow:0 4px 24px rgba(0,0,0,.25);transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .3s;opacity:0;white-space:nowrap;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.amber{background:var(--amber)}
+.time-warning-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center}
+.time-warning-overlay.show{display:flex}
+.time-warning-box{background:var(--white);border-radius:var(--radius);padding:2rem 2.5rem;text-align:center;max-width:340px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,.25);border-top:5px solid var(--red)}
+.time-warning-box .tw-icon{font-size:2.5rem;margin-bottom:.5rem}
+.time-warning-box h3{font-family:'Nunito',sans-serif;font-size:1.3rem;font-weight:800;color:var(--red);margin-bottom:.4rem}
+.time-warning-box p{font-size:.95rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.5}
+.time-warning-box .btn-warn{font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;padding:.7rem 1.75rem;background:var(--red);color:white;border:none;border-radius:8px;cursor:pointer}
+@media(max-width:600px){.header h1{font-size:1.4rem}.info-val{font-size:1.1rem}.test-cards{grid-template-columns:1fr}.g-opts{grid-template-columns:1fr}.sp-card{flex-direction:column;align-items:flex-start}.sp-input{width:100%}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-inner">
+    <div class="pencil-icon">📝</div>
+    <h1 id="header-title">Year 2 English Tests</h1>
+    <p id="header-sub">Based on KS1 format</p>
+    <div class="variant-badge" id="variant-badge">Loading...</div>
+  </div>
+</div>
+<div class="main">
+
+<div id="name-screen">
+  <h2>Before you start...</h2>
+  <p>Enter your first name, then choose which test you'd like to do today.</p>
+  <input class="name-input" id="pupil-name" type="text" placeholder="Your first name" maxlength="40">
+  <span class="test-select-label">Which test would you like to do?</span>
+  <div class="test-cards">
+    <div class="test-card" id="tc-grammar" onclick="selectTest('grammar')">
+      <span class="tc-icon">✏️</span>
+      <div class="tc-name">Grammar &amp; Punctuation</div>
+      <div class="tc-info">20 questions · 20 min</div>
+    </div>
+    <div class="test-card" id="tc-spelling" onclick="selectTest('spelling')">
+      <span class="tc-icon">🔊</span>
+      <div class="tc-name">Spelling</div>
+      <div class="tc-info">20 words · 15 min</div>
+    </div>
+  </div>
+  <button class="btn-start" id="btn-start" onclick="startTest()" disabled>Select a test to begin →</button>
+</div>
+
+<div id="test-screen">
+  <div class="info-bar">
+    <div class="info-card"><div class="info-label">Time left</div><div class="info-val" id="timer">20:00</div></div>
+    <div class="info-card"><div class="info-label">Answered</div><div class="info-val" id="answered">0 / 20</div></div>
+    <div class="info-card"><div class="info-label">Child</div><div class="info-val" id="name-display" style="font-size:1rem">—</div></div>
+  </div>
+  <div class="progress-wrap"><div class="progress-fill" id="progress"></div></div>
+  <div class="speech-warning" id="speech-warning">⚠️ Your browser may not support audio. Try Chrome or Safari.</div>
+  <div id="test-area"></div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="markTest()">✓ Submit &amp; mark my test</button>
+    <button class="btn" onclick="confirmReset()">↺ Start again</button>
+  </div>
+</div>
+
+<div id="results-screen">
+  <div class="results-card">
+    <div class="score-circle">
+      <div class="score-big" id="res-score"></div>
+      <div class="score-denom">out of 20</div>
+    </div>
+    <div class="score-name" id="res-name"></div>
+    <div class="score-band" id="res-band"></div>
+    <div id="res-chip" class="band-chip"></div>
+    <div class="email-status" id="email-status"></div>
+  </div>
+  <div class="breakdown-title" id="breakdown-title"></div>
+  <ul class="wrong-list" id="wrong-list"></ul>
+  <div class="btn-row" style="justify-content:center;margin-top:1rem">
+    <button class="btn btn-primary" onclick="resetAll()">↺ Take another test</button>
+  </div>
+</div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="time-warning-overlay" id="time-warning-overlay">
+  <div class="time-warning-box">
+    <div class="tw-icon">⏰</div>
+    <h3>2 minutes left!</h3>
+    <p>Try to check your answers and fill in any blanks!</p>
+    <button class="btn-warn" onclick="dismissWarning()">OK, got it!</button>
+  </div>
+</div>
+
+<script>
+const EJS_KEY="BMMGXE8I6OtVeMROI",EJS_SVC="service_wtgin0l",EJS_TPL="template_tb01514",P_EMAIL="ritasos@hotmail.com";
+emailjs.init(EJS_KEY);
+
+/* ══ GRAMMAR BANK — 60 questions, Year 2 KS1 ══ */
+const GRAMMAR_BANK=[
+  /* WORD CLASSES */
+  {id:'g1',type:'mcq',section:'Word classes',question:"Which word is a <strong>verb</strong> (doing word)?",opts:["happy","run","big","the"],answers:[1]},
+  {id:'g2',type:'mcq',section:'Word classes',question:"Which word is a <strong>noun</strong> (naming word)?",opts:["quickly","jump","dinosaur","green"],answers:[2]},
+  {id:'g3',type:'mcq',section:'Word classes',question:"Which word is an <strong>adjective</strong> (describing word)?",opts:["sing","slowly","enormous","they"],answers:[2]},
+  {id:'g4',type:'tick',section:'Word classes',question:"Tick the word that is a <strong>verb</strong>.",opts:["golden","spaceship","climbed","quietly"],answers:[2]},
+  {id:'g5',type:'mcq',section:'Word classes',question:"Which word is a <strong>noun</strong>?",opts:["ran","small","rocket","carefully"],answers:[2]},
+  {id:'g6',type:'mcq',section:'Word classes',question:"Which word describes how the superhero runs?",context:"The superhero ran <u>quickly</u> to save the day.",opts:["superhero","ran","quickly","save"],answers:[2]},
+  {id:'g7',type:'tick',section:'Word classes',question:"Tick the <strong>adjective</strong> in this sentence.",opts:["The","fierce","dragon","breathed"],answers:[1]},
+  {id:'g8',type:'mcq',section:'Word classes',question:"Which word is a <strong>pronoun</strong>?",opts:["jump","she","blue","quietly"],answers:[1]},
+  {id:'g9',type:'tick',section:'Word classes',question:"Tick the sentence that has a <strong>doing word (verb)</strong>.",opts:["A big red ball.","The happy dog.","The cat jumped over the wall.","A very tall tree."],answers:[2]},
+  {id:'g10',type:'mcq',section:'Word classes',question:"What kind of word is <strong>beautiful</strong>?",opts:["Noun","Verb","Adjective","Pronoun"],answers:[2]},
+  {id:'g11',type:'mcq',section:'Word classes',question:"Which word joins two sentences together?",opts:["big","and","jump","the"],answers:[1]},
+  {id:'g12',type:'mcq',section:'Word classes',question:"Which word is a <strong>connective</strong>?",opts:["blue","because","cat","slowly"],answers:[1]},
+  {id:'g13',type:'tick',section:'Word classes',question:"Tick <strong>two</strong> nouns.",opts:["dinosaur","run","football","carefully"],answers:[0,2]},
+  {id:'g14',type:'mcq',section:'Word classes',question:"Which word is an <strong>adverb</strong> (describes how)?",opts:["cat","blue","slowly","jump"],answers:[2]},
+  {id:'g15',type:'tick',section:'Word classes',question:"Tick the <strong>noun</strong> in this sentence.",opts:["The","tiny","spider","crawled"],answers:[2]},
+  /* SENTENCES & PUNCTUATION */
+  {id:'g16',type:'mcq',section:'Sentences & punctuation',question:"Which sentence has the correct punctuation at the end?",opts:["The dog barked","The dog barked.","the dog barked.","The dog barked,"],answers:[1]},
+  {id:'g17',type:'mcq',section:'Sentences & punctuation',question:"Which sentence uses a <strong>question mark</strong> correctly?",opts:["What is your name.","what is your name?","What is your name?","What is your name!"],answers:[2]},
+  {id:'g18',type:'mcq',section:'Sentences & punctuation',question:"Which sentence starts correctly?",opts:["the cat sat on the mat.","The cat sat on the mat.","The cat sat on the mat","the Cat sat on the mat."],answers:[1]},
+  {id:'g19',type:'tick',section:'Sentences & punctuation',question:"Tick the sentence that uses an <strong>exclamation mark</strong> correctly.",opts:["What a brilliant goal!","What a brilliant goal.","what a brilliant goal!","What a brilliant goal?"],answers:[0]},
+  {id:'g20',type:'mcq',section:'Sentences & punctuation',question:"Which punctuation mark goes at the end of a question?",opts:[". (full stop)","! (exclamation mark)","? (question mark)",", (comma)"],answers:[2]},
+  {id:'g21',type:'mcq',section:'Sentences & punctuation',question:"Which sentence is punctuated correctly?",opts:["i love dinosaurs.","I love Dinosaurs.","I love dinosaurs.","i Love dinosaurs."],answers:[2]},
+  {id:'g22',type:'tick',section:'Sentences & punctuation',question:"Tick the sentence that is correct.",opts:["the rocket flew to the moon?","The rocket flew to the moon.","The rocket flew to the moon","the rocket flew to the moon."],answers:[1]},
+  {id:'g23',type:'mcq',section:'Sentences & punctuation',question:"What type of sentence is this?\n\n\"Please tidy your room.\"",opts:["Question","Exclamation","Command","Statement"],answers:[2]},
+  {id:'g24',type:'mcq',section:'Sentences & punctuation',question:"Which of these is a <strong>question</strong>?",opts:["I like football.","How many goals did he score?","He scored three goals.","The match was exciting!"],answers:[1]},
+  {id:'g25',type:'tick',section:'Sentences & punctuation',question:"Tick the sentence that needs a <strong>question mark</strong>.",opts:["The dinosaur was huge.","Can dinosaurs fly.","Run as fast as you can.","I love space."],answers:[1]},
+  {id:'g26',type:'mcq',section:'Sentences & punctuation',question:"Which sentence uses a <strong>comma in a list</strong> correctly?",opts:["I like cats dogs and fish.","I like cats, dogs and fish.","I like cats, dogs, and, fish.","I like, cats dogs and fish."],answers:[1]},
+  {id:'g27',type:'tick',section:'Sentences & punctuation',question:"Tick the sentence that is <strong>punctuated correctly</strong>.",opts:["have you seen my book","Have you seen my book?","Have you seen my book.","have you seen my book?"],answers:[1]},
+  /* WORD STRUCTURE & VOCABULARY */
+  {id:'g28',type:'mcq',section:'Word structure',question:"Which word means the <strong>opposite</strong> of happy?",opts:["glad","joyful","sad","merry"],answers:[2]},
+  {id:'g29',type:'mcq',section:'Word structure',question:"Add the prefix <strong>un-</strong> to make the opposite of <em>happy</em>.",opts:["dishappy","unhappy","rehappy","nothappy"],answers:[1]},
+  {id:'g30',type:'mcq',section:'Word structure',question:"What does the prefix <strong>un-</strong> mean in <em>unkind</em>?",opts:["very","again","not","before"],answers:[2]},
+  {id:'g31',type:'input',section:'Word structure',question:"Add <strong>-ing</strong> to the word <em>jump</em>.",instruction:"Write the new word.",answers:["jumping"],displayAnswer:"jumping"},
+  {id:'g32',type:'mcq',section:'Word structure',question:"Which is the correct <strong>plural</strong> of <em>box</em>?",opts:["boxs","boxies","boxes","box"],answers:[2]},
+  {id:'g33',type:'mcq',section:'Word structure',question:"Which word means the same as <em>big</em>?",opts:["tiny","huge","small","thin"],answers:[1]},
+  {id:'g34',type:'tick',section:'Word structure',question:"Tick the correct spelling of the plural of <em>baby</em>.",opts:["babys","babyes","babies","baby"],answers:[2]},
+  {id:'g35',type:'mcq',section:'Word structure',question:"Which suffix makes <em>help</em> into a describing word?",opts:["-ing","-ful","-ed","-est"],answers:[1]},
+  {id:'g36',type:'input',section:'Word structure',question:"Add <strong>-ed</strong> to the word <em>walk</em> to show it happened in the past.",instruction:"Write the new word.",answers:["walked"],displayAnswer:"walked"},
+  {id:'g37',type:'mcq',section:'Word structure',question:"Which word is the correct past tense of <em>run</em>?",opts:["runned","runs","running","ran"],answers:[3]},
+  {id:'g38',type:'mcq',section:'Word structure',question:"Which word uses the prefix <strong>un-</strong> correctly?",opts:["uneat","unlock","unswim","uneasy... wait — which is a real word?"],opts:["unhappy","disrun","rejump","undo"],answers:[0]},
+  {id:'g39',type:'tick',section:'Word structure',question:"Tick the word that is the <strong>opposite</strong> of <em>cold</em>.",opts:["cool","warm","icy","freezing"],answers:[1]},
+  {id:'g40',type:'mcq',section:'Word structure',question:"Which suffix makes <em>slow</em> into an adverb?",opts:["-ful","-ing","-ly","-ness"],answers:[2]},
+  /* GRAMMAR IN SENTENCES */
+  {id:'g41',type:'mcq',section:'Grammar in sentences',question:"Which word correctly completes the sentence?\n\n\"Yesterday I ___ to the park.\"",opts:["go","goes","went","going"],answers:[2]},
+  {id:'g42',type:'mcq',section:'Grammar in sentences',question:"Which joining word fits best?\n\n\"I like cats ___ I don't like dogs.\"",opts:["and","because","but","so"],answers:[2]},
+  {id:'g43',type:'tick',section:'Grammar in sentences',question:"Tick the sentence written in the <strong>past tense</strong>.",opts:["The rocket flies to the moon.","The rocket will fly to the moon.","The rocket flew to the moon.","The rocket is flying to the moon."],answers:[2]},
+  {id:'g44',type:'mcq',section:'Grammar in sentences',question:"Which sentence is in the <strong>present tense</strong>?",opts:["She jumped in the puddle.","She jumps in the puddle.","She will jump in the puddle.","She had jumped in the puddle."],answers:[1]},
+  {id:'g45',type:'mcq',section:'Grammar in sentences',question:"Which word correctly completes this sentence?\n\n\"___ are going to the zoo today.\"",opts:["Him","Them","We","Me"],answers:[2]},
+  {id:'g46',type:'tick',section:'Grammar in sentences',question:"Tick the sentence that uses <strong>and</strong> correctly.",opts:["I like pizza and.","And I like pizza.","I like pizza and pasta.","I like and pizza."],answers:[2]},
+  {id:'g47',type:'mcq',section:'Grammar in sentences',question:"Which sentence uses <strong>because</strong> correctly?",opts:["I wore a coat because.","Because I was cold.","I wore a coat because I was cold.","I wore because a coat."],answers:[2]},
+  {id:'g48',type:'mcq',section:'Grammar in sentences',question:"Which word correctly completes the sentence?\n\n\"The dinosaurs ___ very big.\"",opts:["is","was","were","be"],answers:[2]},
+  {id:'g49',type:'tick',section:'Grammar in sentences',question:"Tick the sentence written in the <strong>future tense</strong>.",opts:["The superhero saved the city.","The superhero saves the city.","The superhero will save the city.","The superhero is saving the city."],answers:[2]},
+  {id:'g50',type:'mcq',section:'Grammar in sentences',question:"Which sentence uses <strong>so</strong> correctly?",opts:["I was tired so I went to bed.","So I was tired.","I was so tired.","I went to bed so."],answers:[0]},
+  /* EXTRA ROTATION */
+  {id:'g51',type:'mcq',section:'Word classes',question:"Which word is a <strong>connective</strong> that shows a reason?",opts:["and","but","because","then"],answers:[2]},
+  {id:'g52',type:'tick',section:'Sentences & punctuation',question:"Tick the sentence that ends with the correct punctuation.",opts:["Where are you going","Where are you going?","Where are you going!","where are you going?"],answers:[1]},
+  {id:'g53',type:'mcq',section:'Word structure',question:"Add <strong>-ness</strong> to <em>dark</em>. What word do you get?",opts:["darkful","darkly","darkness","darken"],answers:[2]},
+  {id:'g54',type:'mcq',section:'Grammar in sentences',question:"Which word best completes this sentence?\n\n\"I brushed my teeth ___ I went to bed.\"",opts:["and","but","so","before"],answers:[3]},
+  {id:'g55',type:'tick',section:'Sentences & punctuation',question:"Tick the correct sentence.",opts:["my dog is called rex.","My dog is called rex.","My dog is called Rex.","my Dog is called Rex."],answers:[2]},
+  {id:'g56',type:'mcq',section:'Word structure',question:"Which is the correct past tense of <em>see</em>?",opts:["seed","sawed","saw","seen"],answers:[2]},
+  {id:'g57',type:'mcq',section:'Grammar in sentences',question:"Which word fills the gap?\n\n\"___ you like to come to my party?\"",opts:["Do","Does","Did","Will"],answers:[0]},
+  {id:'g58',type:'tick',section:'Word classes',question:"Tick the word that is an <strong>adjective</strong>.",opts:["slowly","sparkle","golden","because"],answers:[2]},
+  {id:'g59',type:'mcq',section:'Sentences & punctuation',question:"Which sentence uses an apostrophe correctly?",opts:["The cat's tail is fluffy.","The cats tail is fluffy.","The cat's' tail is fluffy.","The cats' tail is fluffy. (one cat)"],answers:[0]},
+  {id:'g60',type:'mcq',section:'Word structure',question:"Which word means the <strong>opposite</strong> of <em>unkind</em>?",opts:["mean","cruel","kind","nasty"],answers:[2]},
+];
+
+/* ══ SPELLING BANK — Year 2 KS1 common exception + statutory words ══ */
+const SPELLING_BANK=[
+  {word:"the",sentence:"___ big dog ran fast across a park."},
+  {word:"a",sentence:"I saw ___ big dinosaur at the museum."},
+  {word:"do",sentence:"What ___ you want for breakfast?"},
+  {word:"to",sentence:"We are going ___ the playground."},
+  {word:"today",sentence:"___ is a sunny day."},
+  {word:"of",sentence:"I drank a glass ___ milk."},
+  {word:"said",sentence:"He ___ hello to his teacher."},
+  {word:"says",sentence:"She always ___ thank you."},
+  {word:"are",sentence:"The children ___ playing outside."},
+  {word:"were",sentence:"The dinosaurs ___ very large animals."},
+  {word:"was",sentence:"The rocket ___ ready for launch."},
+  {word:"is",sentence:"The superhero ___ very brave."},
+  {word:"his",sentence:"The dog wagged ___ tail."},
+  {word:"has",sentence:"She ___ a red coat."},
+  {word:"you",sentence:"Can ___ help me please?"},
+  {word:"your",sentence:"What is ___ favourite animal?"},
+  {word:"they",sentence:"___ went to the park after school."},
+  {word:"be",sentence:"I want to ___ an astronaut one day."},
+  {word:"he",sentence:"___ kicked the football into the goal."},
+  {word:"me",sentence:"Please give it to ___."},
+  {word:"she",sentence:"___ drew a picture of a dragon."},
+  {word:"we",sentence:"___ played football at lunchtime."},
+  {word:"no",sentence:"There is ___ more cake left."},
+  {word:"go",sentence:"Let's ___ to the park today."},
+  {word:"so",sentence:"I was tired, ___ I went to bed."},
+  {word:"by",sentence:"The book was written ___ a famous author."},
+  {word:"my",sentence:"___ favourite dinosaur is the T-Rex."},
+  {word:"here",sentence:"Come ___ and look at this."},
+  {word:"there",sentence:"___ is a spider on the wall!"},
+  {word:"where",sentence:"___ are you going after school?"},
+  {word:"love",sentence:"I ___ going to the football match."},
+  {word:"come",sentence:"Please ___ and join us for lunch."},
+  {word:"some",sentence:"Can I have ___ more please?"},
+  {word:"one",sentence:"I only need ___ more sticker."},
+  {word:"once",sentence:"___ upon a time there was a dragon."},
+  {word:"ask",sentence:"You should ___ your teacher if you are not sure."},
+  {word:"friend",sentence:"My best ___ lives next door."},
+  {word:"school",sentence:"We go to ___ five days a week."},
+  {word:"put",sentence:"Please ___ your coat on the peg."},
+  {word:"push",sentence:"You need to ___ the door to open it."},
+  {word:"pull",sentence:"___ the rope as hard as you can."},
+  {word:"full",sentence:"My bag is ___ of books."},
+  {word:"house",sentence:"The dinosaur was as big as a ___."},
+  {word:"our",sentence:"___ class went on a trip to the museum."},
+  {word:"because",sentence:"I wore a coat ___ it was cold."},
+  {word:"people",sentence:"Many ___ came to watch the football match."},
+  {word:"water",sentence:"The fish live in the ___."},
+  {word:"again",sentence:"Can we play that game ___ please?"},
+  {word:"half",sentence:"I ate ___ of the pizza."},
+  {word:"every",sentence:"I brush my teeth ___ morning."},
+  {word:"many",sentence:"How ___ legs does a spider have?"},
+  {word:"child",sentence:"Every ___ in the class got a sticker."},
+  {word:"children",sentence:"The ___ played in the park."},
+  {word:"most",sentence:"___ children like football."},
+  {word:"both",sentence:"___ my arms ached after swimming."},
+  {word:"any",sentence:"Is there ___ cake left?"},
+  {word:"after",sentence:"We played football ___ school."},
+  {word:"fast",sentence:"The cheetah can run very ___."},
+  {word:"last",sentence:"I was the ___ one to finish."},
+  {word:"past",sentence:"We walked ___ the park on our way home."},
+  {word:"father",sentence:"My ___ takes me to football practice."},
+  {word:"class",sentence:"Our ___ has 28 children in it."},
+  {word:"grass",sentence:"The cow ate the green ___."},
+  {word:"pass",sentence:"Please ___ me the pencil."},
+  {word:"plant",sentence:"We grew a ___ in a pot."},
+  {word:"path",sentence:"We walked along the ___ through the woods."},
+  {word:"bath",sentence:"I have a ___ every evening."},
+  {word:"move",sentence:"Can you ___ out of the way please?"},
+  {word:"prove",sentence:"Can you ___ that you are telling the truth?"},
+  {word:"sure",sentence:"Are you ___ you've packed everything?"},
+  {word:"sugar",sentence:"Would you like ___ in your tea?"},
+  {word:"who",sentence:"___ is your favourite superhero?"},
+  {word:"whole",sentence:"I ate the ___ pizza myself."},
+  {word:"clothes",sentence:"I put my ___ in the washing machine."},
+  {word:"busy",sentence:"The town centre was very ___ on Saturday."},
+  {word:"find",sentence:"Can you ___ my football please?"},
+  {word:"kind",sentence:"It is important to be ___ to others."},
+  {word:"mind",sentence:"I don't ___ which game we play."},
+  {word:"behind",sentence:"The cat was hiding ___ the sofa."},
+  {word:"wild",sentence:"The ___ animals roamed the savanna."},
+  {word:"climb",sentence:"The monkey likes to ___ trees."},
+  {word:"cold",sentence:"It was very ___ and snowy outside."},
+  {word:"gold",sentence:"The superhero wore a ___ cape."},
+  {word:"hold",sentence:"Please ___ my hand when we cross the road."},
+  {word:"told",sentence:"She ___ me a funny joke."},
+];
+
+/* ══ HELPERS ══ */
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]];}return b;}
+function pick(a,n){return shuffle(a).slice(0,n);}
+function el(tag,cls){const e=document.createElement(tag);if(cls)e.className=cls;return e;}
+
+/* ══ STATE ══ */
+let timerInterval,seconds=20*60,pupilName='',variantCode='',selectedTest='';
+let currentGrammar=[],currentSpelling=[];
+let allQs=[],tickSelections={},mcqSelections={};
+let toastTimer=null,currentUtterance=null;
+
+function selectTest(t){
+  selectedTest=t;
+  ['grammar','spelling'].forEach(k=>document.getElementById('tc-'+k).classList.remove('selected'));
+  document.getElementById('tc-'+t).classList.add('selected');
+  document.getElementById('btn-start').disabled=false;
+  document.getElementById('btn-start').textContent='Start the test →';
+}
+
+function generateTest(){
+  variantCode='Test #'+(0|Math.random()*9000+1000);
+  document.getElementById('variant-badge').textContent=variantCode;
+  currentGrammar=pick(GRAMMAR_BANK,20);
+  currentSpelling=pick(SPELLING_BANK,20);
+}
+
+function buildTest(){
+  const area=document.getElementById('test-area');
+  area.innerHTML='';allQs=[];tickSelections={};mcqSelections={};
+
+  if(selectedTest==='grammar'){
+    seconds=20*60;
+    document.getElementById('header-title').textContent='Year 2 Grammar & Punctuation';
+    document.getElementById('header-sub').textContent='20 questions · 20 minutes · KS1 format';
+    document.getElementById('answered').textContent='0 / 20';
+    let lastSection='';
+    currentGrammar.forEach((q,qi)=>{
+      if(q.section!==lastSection){
+        const h=el('div','section-title');h.textContent=q.section;area.appendChild(h);
+        lastSection=q.section;
+      }
+      allQs.push({type:'grammar',id:q.id,qi,data:q,num:qi+1});
+      area.appendChild(buildGrammarDOM(q,qi+1,qi));
+    });
+  } else {
+    seconds=15*60;
+    document.getElementById('header-title').textContent='Year 2 Spelling Test';
+    document.getElementById('header-sub').textContent='20 words · 15 minutes · Listen and type each word';
+    document.getElementById('answered').textContent='0 / 20';
+    if(!('speechSynthesis' in window))document.getElementById('speech-warning').classList.add('show');
+    const h=el('div','section-title');h.textContent='Listen and write the word you hear';area.appendChild(h);
+    const hint=el('div','');
+    hint.style.cssText='font-size:.85rem;color:var(--muted);margin-bottom:1rem;line-height:1.5';
+    hint.innerHTML='Press <strong>Listen</strong> to hear the word in a sentence. Then type the word in the box.';
+    area.appendChild(hint);
+    currentSpelling.forEach((s,si)=>{
+      allQs.push({type:'spelling',si,word:s.word,num:si+1});
+      area.appendChild(buildSpellingDOM(s,si+1,si));
+    });
+  }
+
+  const mm=Math.floor(seconds/60);
+  document.getElementById('timer').textContent=mm+':00';
+  updateProgress();
+}
+
+function buildGrammarDOM(q,num,qi){
+  const card=el('div','g-card');card.id='gcard-'+qi;
+  let html=`<div class="g-header"><span class="g-qnum">${num}.</span><span class="g-marks">1 mark</span></div>`;
+  if(q.context)html+=`<div class="g-context">${q.context}</div>`;
+  html+=`<div class="g-question">${q.question.replace(/\n/g,'<br>')}</div>`;
+  if(q.instruction)html+=`<div class="g-instruction">${q.instruction}</div>`;
+
+  if(q.type==='mcq'){
+    const colClass=q.opts.some(o=>o.length>25)?'g-opts single-col':'g-opts';
+    html+=`<div class="${colClass}" id="gopt-${qi}">`;
+    q.opts.forEach((opt,oi)=>{
+      html+=`<div class="g-opt" onclick="gMcqClick(${qi},${oi})"><span class="g-opt-bullet"></span><span>${opt}</span></div>`;
+    });
+    html+=`</div>`;
+  } else if(q.type==='tick'){
+    if(!tickSelections[qi])tickSelections[qi]=[];
+    html+=`<div class="g-ticks" id="gtick-${qi}">`;
+    q.opts.forEach((opt,oi)=>{
+      html+=`<div class="g-tick" onclick="gTickClick(${qi},${oi})"><span class="tick-box">✓</span><span class="tick-label">${opt}</span></div>`;
+    });
+    html+=`</div>`;
+  } else if(q.type==='input'){
+    html+=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <input class="g-input" type="text" id="ginp-${qi}" autocomplete="off" oninput="updateProgress()" placeholder="Type your answer">
+      <span class="g-check" id="gchk-${qi}"></span></div>
+    <div class="g-correct-ans" id="gans-${qi}"></div>`;
+  }
+  card.innerHTML=html;return card;
+}
+
+function gMcqClick(qi,oi){
+  const opts=document.querySelectorAll(`#gopt-${qi} .g-opt`);
+  opts.forEach(o=>o.classList.remove('selected'));
+  opts[oi].classList.add('selected');
+  mcqSelections[qi]=oi;updateProgress();
+}
+function gTickClick(qi,oi){
+  if(!tickSelections[qi])tickSelections[qi]=[];
+  const tick=document.querySelector(`#gtick-${qi} .g-tick:nth-child(${oi+1})`);
+  const idx=tickSelections[qi].indexOf(oi);
+  if(idx>=0){tickSelections[qi].splice(idx,1);tick.classList.remove('ticked');}
+  else{tickSelections[qi].push(oi);tick.classList.add('ticked');}
+  updateProgress();
+}
+
+function buildSpellingDOM(s,num,si){
+  const card=el('div','sp-card');card.id='spcard-'+si;
+  card.innerHTML=`<span class="sp-num">${num}.</span>
+    <button class="sp-listen-btn" id="splisten-${si}" onclick="speakWord(${si})">🔊 Listen</button>
+    <span class="sp-sentence">${s.sentence.replace(s.word,'________')}</span>
+    <input class="sp-input" type="text" id="spinp-${si}" autocomplete="off" autocorrect="off" spellcheck="false" oninput="updateProgress()" placeholder="Type the word">
+    <span class="sp-check" id="spchk-${si}"></span>
+    <span class="sp-correct-word" id="spword-${si}"></span>`;
+  return card;
+}
+
+function speakWord(si){
+  if(!('speechSynthesis' in window)){document.getElementById('speech-warning').classList.add('show');return;}
+  window.speechSynthesis.cancel();
+  const s=currentSpelling[si];
+  const btn=document.getElementById('splisten-'+si);
+  const text=`The word is... ${s.word}. ... ${s.sentence.replace('___',s.word)}. ... ${s.word}.`;
+  const utt=new SpeechSynthesisUtterance(text);
+  utt.lang='en-GB';utt.rate=0.85;utt.pitch=1;
+  const voices=window.speechSynthesis.getVoices();
+  const gbVoice=voices.find(v=>v.lang==='en-GB')||voices.find(v=>v.lang.startsWith('en'));
+  if(gbVoice)utt.voice=gbVoice;
+  btn.classList.add('playing');
+  utt.onend=()=>btn.classList.remove('playing');
+  utt.onerror=()=>btn.classList.remove('playing');
+  currentUtterance=utt;
+  window.speechSynthesis.speak(utt);
+}
+window.speechSynthesis&&window.speechSynthesis.addEventListener('voiceschanged',()=>{});
+
+function updateProgress(){
+  let done=0;
+  if(selectedTest==='grammar'){
+    allQs.forEach(q=>{
+      const d=q.data;
+      if(d.type==='mcq'&&mcqSelections[q.qi]!==undefined)done++;
+      else if(d.type==='tick'&&tickSelections[q.qi]&&tickSelections[q.qi].length>0)done++;
+      else if(d.type==='input'&&document.getElementById('ginp-'+q.qi)?.value.trim())done++;
+    });
+  } else {
+    allQs.forEach(q=>{if(document.getElementById('spinp-'+q.si)?.value.trim())done++;});
+  }
+  document.getElementById('answered').textContent=done+' / 20';
+  document.getElementById('progress').style.width=Math.round(done/20*100)+'%';
+}
+
+/* ══ TIMER ══ */
+function showToast(msg,colour,duration=4000){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast'+(colour?' '+colour:'');
+  clearTimeout(toastTimer);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{t.classList.add('show');}));
+  toastTimer=setTimeout(()=>t.classList.remove('show'),duration);
+}
+function dismissWarning(){document.getElementById('time-warning-overlay').classList.remove('show');}
+function startTimer(){
+  const totalSecs=seconds;const announcedMinutes=new Set();
+  timerInterval=setInterval(()=>{
+    seconds--;
+    const mm=Math.floor(seconds/60),ss=seconds%60;
+    const el2=document.getElementById('timer');
+    el2.textContent=mm+':'+(ss<10?'0':'')+ss;
+    const elapsed=Math.floor((totalSecs-seconds)/60);
+    if(elapsed>0&&elapsed%5===0&&ss===0&&!announcedMinutes.has(elapsed)){
+      announcedMinutes.add(elapsed);showToast('⏱ '+elapsed+' minutes past','');
+    }
+    if(seconds===300&&ss===0)showToast('⚠️ 5 minutes remaining','amber',5000);
+    if(seconds<=120){el2.classList.add('warning');if(seconds===120)document.getElementById('time-warning-overlay').classList.add('show');}
+    if(seconds<=0){stopTimer();dismissWarning();markTest();}
+  },1000);
+}
+function stopTimer(){clearInterval(timerInterval);if(currentUtterance)window.speechSynthesis&&window.speechSynthesis.cancel();}
+
+/* ══ MARK ══ */
+function markTest(){
+  stopTimer();
+  let score=0,wrong=[];
+  const sb={};
+
+  if(selectedTest==='grammar'){
+    allQs.forEach(q=>{
+      const d=q.data,qi=q.qi;
+      if(!sb[d.section])sb[d.section]={c:0,t:0};
+      sb[d.section].t++;
+
+      if(d.type==='mcq'){
+        const given=mcqSelections[qi],correct=d.answers[0],ok=given===correct;
+        const opts=document.querySelectorAll(`#gopt-${qi} .g-opt`);
+        opts.forEach(o=>o.style.pointerEvents='none');
+        opts[correct]?.classList.add('correct-reveal');
+        if(ok){score++;sb[d.section].c++;opts[given]?.classList.remove('correct-reveal');opts[given]?.classList.add('correct-final');}
+        else{if(given!==undefined)opts[given]?.classList.add('wrong-final');
+          wrong.push({num:q.num,section:d.section,desc:d.question.replace(/<[^>]+>/g,'').trim(),correct:d.opts[correct],given:given!==undefined?d.opts[given]:'(blank)'});}
+      } else if(d.type==='tick'){
+        const given=(tickSelections[qi]||[]).slice().sort(),correct=d.answers.slice().sort();
+        const ok=JSON.stringify(given)===JSON.stringify(correct);
+        const ticks=document.querySelectorAll(`#gtick-${qi} .g-tick`);
+        ticks.forEach(t=>t.style.pointerEvents='none');
+        correct.forEach(ci=>ticks[ci]?.classList.add('correct-reveal'));
+        given.forEach(gi=>{
+          if(correct.includes(gi))ticks[gi]?.classList.remove('correct-reveal');
+          ticks[gi]?.classList.add(correct.includes(gi)?'correct-final':'wrong-final');
+        });
+        if(ok){score++;sb[d.section].c++;}
+        else wrong.push({num:q.num,section:d.section,desc:d.question.replace(/<[^>]+>/g,'').trim(),
+          correct:correct.map(i=>d.opts[i]).join(' & '),given:given.length?given.map(i=>d.opts[i]).join(' & '):'(blank)'});
+      } else if(d.type==='input'){
+        const inp=document.getElementById('ginp-'+qi);
+        const given=(inp?.value||'').trim().toLowerCase();
+        const ok=d.answers.map(a=>a.toLowerCase()).includes(given);
+        if(inp){inp.disabled=true;inp.classList.add(ok?'correct':'wrong');}
+        const chk=document.getElementById('gchk-'+qi);
+        if(chk){chk.classList.add('show');chk.textContent=ok?'✓':'✗';chk.style.color=ok?'var(--green)':'var(--red)';}
+        const ans=document.getElementById('gans-'+qi);
+        if(!ok&&ans){ans.classList.add('show');ans.textContent='✓ '+d.displayAnswer;}
+        if(ok){score++;sb[d.section].c++;}
+        else wrong.push({num:q.num,section:d.section,desc:d.question.replace(/<[^>]+>/g,'').trim(),correct:d.displayAnswer,given:given||'(blank)'});
+      }
+    });
+    showResults(score,wrong,sb);return;
+  } else {
+    sb['Spelling']={c:0,t:0};
+    allQs.forEach(q=>{
+      const si=q.si;sb['Spelling'].t++;
+      const inp=document.getElementById('spinp-'+si);
+      const given=(inp?.value||'').trim().toLowerCase().replace(/[^a-z]/g,'');
+      const ok=given===q.word.toLowerCase();
+      if(inp){inp.disabled=true;inp.classList.add(ok?'correct':'wrong');}
+      const chk=document.getElementById('spchk-'+si);
+      if(chk){chk.classList.add('show');chk.textContent=ok?'✓':'✗';chk.style.color=ok?'var(--green)':'var(--red)';}
+      const wrd=document.getElementById('spword-'+si);
+      if(!ok&&wrd){wrd.classList.add('show');wrd.textContent='✓ '+q.word;}
+      if(ok){score++;sb['Spelling'].c++;}
+      else wrong.push({num:q.num,section:'Spelling',desc:currentSpelling[si].sentence.replace('___','________'),correct:q.word,given:(inp?.value||'').trim()||'(blank)'});
+    });
+    showResults(score,wrong,sb);return;
+  }
+}
+
+/* ══ RESULTS ══ */
+function showResults(score,wrong,sb){
+  document.getElementById('test-screen').style.display='none';
+  document.getElementById('results-screen').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('res-score').textContent=score;
+  document.getElementById('res-name').textContent=pupilName+"'s results";
+
+  const pct=score/20;
+  let band,cc,bt;
+  if(pct>=0.85){band='Excellent';cc='band-excellent';bt='Well above expected standard';}
+  else if(pct>=0.65){band='Good';cc='band-good';bt='Meeting expected Year 2 standard';}
+  else if(pct>=0.45){band='Developing';cc='band-developing';bt='Approaching expected standard';}
+  else{band='Needs support';cc='band-support';bt='Below expected standard';}
+
+  document.getElementById('res-band').textContent=bt;
+  const chip=document.getElementById('res-chip');chip.textContent=band;chip.className='band-chip '+cc;
+
+  const dt=document.getElementById('breakdown-title'),wl=document.getElementById('wrong-list');
+  wl.innerHTML='';
+  if(wrong.length===0){dt.textContent='🎉 Perfect score! All 20 correct!';}
+  else{
+    dt.textContent=`Review (${wrong.length} question${wrong.length!==1?'s':''} to practise):`;
+    wrong.forEach(w=>{
+      const li=el('li','wrong-item');
+      li.innerHTML=`<div class="wrong-item-header"><span class="wrong-qnum">Q${w.num}</span><span class="wrong-q">${w.desc}</span></div>`+
+        `<div><span class="wrong-correct">✓ ${w.correct}</span> <span class="wrong-given">(you wrote: ${w.given})</span></div>`;
+      wl.appendChild(li);
+    });
+  }
+
+  const testLabel=selectedTest==='grammar'?'Grammar & Punctuation':'Spelling';
+  const elapsed=(selectedTest==='grammar'?20:15)*60-seconds;
+  const tt=formatTime(Math.max(0,elapsed));
+  let ss='';Object.entries(sb).forEach(([t,d])=>{
+    const pct2=d.t>0?Math.round(d.c/d.t*100):0;
+    ss+=`  ${t}: ${d.c}/${d.t} (${pct2}%)\n`;
+  });
+  const ws=wrong.length===0?'All correct!':wrong.map(w=>`  Q${w.num}: ${w.desc}  ✓ ${w.correct} (wrote: ${w.given})`).join('\n');
+  const body=`Year 2 English Test Results\n====================\nChild: ${pupilName}\nTest: ${testLabel}\nScore: ${score} out of 20\nBand: ${band} - ${bt}\nTime: ${tt}\nVariant: ${variantCode}\n\nSection breakdown:\n${ss}\nTo review:\n${ws}\n====================\n${new Date().toLocaleString('en-GB')}`;
+  sendEmail(score,band,tt,body,testLabel);
+}
+
+function formatTime(e){const m=Math.floor(e/60),s=e%60;return m+' min '+s+' sec';}
+
+function sendEmail(score,band,tt,body,testName){
+  const el2=document.getElementById('email-status');
+  el2.className='email-status sending';el2.textContent='📨 Sending results...';
+  emailjs.send(EJS_SVC,EJS_TPL,{to_email:P_EMAIL,pupil_name:pupilName,score:score+' out of 20',band,time_taken:tt,results_body:body,date:new Date().toLocaleString('en-GB'),test_name:testName,subject:'Year 2 English'})
+  .then(()=>{el2.className='email-status sent';el2.textContent='✅ Results sent!';})
+  .catch(e=>{el2.className='email-status failed';el2.textContent='⚠️ Could not send email.';console.error(e);});
+}
+
+function startTest(){
+  const n=document.getElementById('pupil-name').value.trim();
+  if(!n){document.getElementById('pupil-name').focus();return;}
+  if(!selectedTest)return;
+  pupilName=n;
+  document.getElementById('name-screen').style.display='none';
+  document.getElementById('test-screen').style.display='block';
+  document.getElementById('name-display').textContent=pupilName;
+  buildTest();startTimer();
+}
+function confirmReset(){if(confirm('Start again? All answers will be cleared.'))resetAll();}
+function resetAll(){
+  stopTimer();dismissWarning();
+  clearTimeout(toastTimer);document.getElementById('toast').classList.remove('show');
+  seconds=20*60;pupilName='';selectedTest='';
+  document.getElementById('pupil-name').value='';
+  document.getElementById('results-screen').style.display='none';
+  document.getElementById('test-screen').style.display='none';
+  document.getElementById('name-screen').style.display='block';
+  document.getElementById('timer').classList.remove('warning');
+  document.getElementById('speech-warning').classList.remove('show');
+  ['grammar','spelling'].forEach(k=>document.getElementById('tc-'+k).classList.remove('selected'));
+  document.getElementById('btn-start').disabled=true;
+  document.getElementById('btn-start').textContent='Select a test to begin →';
+  document.getElementById('header-title').textContent='Year 2 English Tests';
+  document.getElementById('header-sub').textContent='Based on KS1 format';
+  generateTest();window.scrollTo({top:0,behavior:'smooth'});
+}
+generateTest();
+</script>
+</body>
+</html>
